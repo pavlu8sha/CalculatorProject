@@ -44,7 +44,7 @@ public class Calculator {
     String calculate(String input) {
         String[] entries = input.split(" ");
         if (entries.length != 3) {
-            throw new IllegalArgumentException("С„РѕСЂРјР°С‚ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё РЅРµ СѓРґРѕРІР»РµС‚РІРѕСЂСЏРµС‚ Р·Р°РґР°РЅРёСЋ - РґРІР° РѕРїРµСЂР°РЅРґР° Рё РѕРґРёРЅ РѕРїРµСЂР°С‚РѕСЂ (+, -, /, *)");
+            throw new IllegalArgumentException("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         }
         String aStr = entries[0];
         String operator = entries[1];
@@ -59,10 +59,10 @@ public class Calculator {
                 case "-" : result = a - b; break;
                 case "/" : result = a / b; break;
                 case "*" : result = a * b; break;
-                default: throw new IllegalArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…");
+                default: throw new IllegalArgumentException("Неправильный формат данных");
             }
             if (result < 0) {
-                throw new IllegalArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…");
+                throw new IllegalArgumentException("Неправильный формат данных");
             } else {
                 return arabicToRome.get(result);
             }
@@ -76,13 +76,13 @@ public class Calculator {
                         case "-" : return String.valueOf(a - b);
                         case "/" : return String.valueOf(a / b);
                         case "*" : return String.valueOf(a * b);
-                        default: throw new IllegalArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…");
+                        default: throw new IllegalArgumentException("Неправильный формат данных");
                     }
                 } else {
-                    throw new IllegalArgumentException("Р§РёСЃР»Рѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕС‚ 1 РґРѕ 10");
+                    throw new IllegalArgumentException("Число должно быть от 1 до 10");
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentException("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…");
+                throw new IllegalArgumentException("Неправильный формат данных");
             }
         }
     }
