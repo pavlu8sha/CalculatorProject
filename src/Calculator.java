@@ -44,7 +44,7 @@ public class Calculator {
     String calculate(String input) {
         String[] entries = input.split(" ");
         if (entries.length != 3) {
-            throw new IllegalArgumentException("формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+            throw new IllegalArgumentException("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         }
         String aStr = entries[0];
         String operator = entries[1];
