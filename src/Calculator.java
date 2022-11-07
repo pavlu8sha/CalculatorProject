@@ -1,58 +1,17 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class Calculator {
-
-    private final Map<String, Integer> romeToArabic = new HashMap();
-    private final Map<Integer, String> arabicToRome = new HashMap();
-
-    Calculator() {
-        romeToArabic.put("I", 1);
-        romeToArabic.put("II", 2);
-        romeToArabic.put("III", 3);
-        romeToArabic.put("IV", 4);
-        romeToArabic.put("V", 5);
-        romeToArabic.put("VI", 6);
-        romeToArabic.put("VII", 7);
-        romeToArabic.put("VIII", 8);
-        romeToArabic.put("IX", 9);
-        romeToArabic.put("X", 10);
-
-        arabicToRome.put(1, "I");
-        arabicToRome.put(2, "II");
-        arabicToRome.put(3, "III");
-        arabicToRome.put(4, "IV");
-        arabicToRome.put(5, "V");
-        arabicToRome.put(6, "VI");
-        arabicToRome.put(7, "VII");
-        arabicToRome.put(8, "VIII");
-        arabicToRome.put(9, "IX");
-        arabicToRome.put(10, "X");
-        arabicToRome.put(11, "XI");
-        arabicToRome.put(12, "XII");
-        arabicToRome.put(13, "XIII");
-        arabicToRome.put(14, "XIV");
-        arabicToRome.put(15, "XV");
-        arabicToRome.put(16, "XVI");
-        arabicToRome.put(17, "XVII");
-        arabicToRome.put(18, "XVIII");
-        arabicToRome.put(19, "XIX");
-        arabicToRome.put(20, "XX");
-        arabicToRome.put(0, "0");
-    }
 
     String calculate(String input) {
         String[] entries = input.split(" ");
         if (entries.length != 3) {
-            throw new IllegalArgumentException("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+            throw new IllegalArgumentException("формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
         }
         String aStr = entries[0];
         String operator = entries[1];
         String bStr = entries[2];
 
-        if (romeToArabic.containsKey(aStr) && romeToArabic.containsKey(bStr)) {
-            int a = romeToArabic.get(aStr);
-            int b = romeToArabic.get(bStr);
+        try {
+            int a = romanToArabic(aStr);
+            int b = romanToArabic(bStr);
             int result;
             switch (operator) {
                 case "+" : result = a + b; break;
@@ -64,9 +23,9 @@ public class Calculator {
             if (result < 0) {
                 throw new IllegalArgumentException("Неправильный формат данных");
             } else {
-                return arabicToRome.get(result);
+                return arabicToRoman(result);
             }
-        } else {
+        } catch (Exception e) {
             try {
                 int a = Integer.parseInt(aStr);
                 int b = Integer.parseInt(bStr);
@@ -81,9 +40,103 @@ public class Calculator {
                 } else {
                     throw new IllegalArgumentException("Число должно быть от 1 до 10");
                 }
-            } catch (Exception e) {
+            } catch (Exception e1) {
                 throw new IllegalArgumentException("Неправильный формат данных");
             }
         }
+    }
+
+    public static String arabicToRoman(final int number) {
+        if (number < 0 || 4000 <= number) {
+            throw new IllegalArgumentException();
+        }
+        String[] nums = { "I", "V", "X", "L", "C", "D", "M" };
+        int numCounter = 0;
+        String result = "";
+        StringBuilder partResult = new StringBuilder();
+        int numeral;
+        String stringNumber = String.valueOf(number);
+        for (int i = stringNumber.length() - 1; i >= 0; i--) {
+            partResult.delete(0, partResult.length());
+            numeral = Integer.parseInt(stringNumber.substring(i, i + 1));
+            if (1 <= numeral && numeral < 4) {
+                for (int j = 0; j < numeral; j++) {
+                    partResult.append(nums[numCounter]);
+                }
+                numCounter += 2;
+            } else if (4 <= numeral && numeral < 9) {
+                numCounter += 2;
+                if (numeral == 4) {
+                    partResult.append(nums[numCounter - 2]);
+                }
+                partResult.append(nums[numCounter - 1]);
+                for (int j = 0; j < (numeral - 5); j++) {
+                    partResult.append(nums[numCounter - 2]);
+                }
+            } else if (numeral == 9) {
+                numCounter += 2;
+                partResult.append(nums[numCounter - 2] + nums[numCounter]);
+            } else if (numeral == 0) {
+                numCounter += 2;
+            }
+            result = partResult.append(result).toString();
+        }
+        return result;
+    }
+
+    public static int romanToArabic(final String number) {
+        int sum = 0;
+        for (int i = 0; i < number.length(); i++) {
+            switch (number.charAt(i)) {
+                case 'I':
+                    sum++;
+                    break;
+                case 'V':
+                    if (sum == 0 || number.charAt(i-1) != 'I') {
+                        sum += 5;
+                    } else {
+                        sum += 3; // IV - I from previous step
+                    }
+                    break;
+                case 'X':
+                    if (sum == 0 || number.charAt(i-1) != 'I') {
+                        sum += 10;
+                    } else {
+                        sum += 8;
+                    }
+                    break;
+                case 'L':
+                    if (sum == 0 || number.charAt(i-1) != 'X') {
+                        sum += 50;
+                    } else {
+                        sum += 30;
+                    }
+                    break;
+                case 'C':
+                    if (sum == 0 || number.charAt(i-1) != 'X') {
+                        sum += 100;
+                    } else {
+                        sum += 80;
+                    }
+                    break;
+                case 'D':
+                    if (sum == 0 || number.charAt(i-1) != 'C') {
+                        sum += 500;
+                    } else {
+                        sum += 300;
+                    }
+                    break;
+                case 'M':
+                    if (sum == 0 || number.charAt(i-1) != 'C') {
+                        sum += 1000;
+                    } else {
+                        sum += 800;
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
+        return sum;
     }
 }
